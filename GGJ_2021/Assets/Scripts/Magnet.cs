@@ -21,11 +21,17 @@ public class Magnet : MonoBehaviour
     void Update()
     {
         // TODO: Check if magnetic through layermask
-        var inRadius = Physics.OverlapSphere(transform.position, _radius, _layerMask).Select(x => x.GetComponent<Rigidbody>());
-        foreach(var rb in inRadius)
+        var inRadius = Physics.OverlapSphere(transform.position, _radius, _layerMask);
+        foreach(var collider in inRadius)
+        {
+            var rb = collider.GetComponent<Rigidbody>();
+            if (rb == null)
+                continue;
+
             rb.AddForce((transform.position - rb.transform.position) * _forceFactor);
+        }
     }
-    
+
     void OnDrawGizmos()
     {
         // Draw a yellow sphere at the transform's position
