@@ -22,7 +22,7 @@ public class WaterSurface : MonoBehaviour
         Package p = other.gameObject.GetComponent<Package>();
         if (p != null && p.Properties.HasFlag(PackageProperties.Floats))
         {
-            _floaters.Add(other.gameObject.GetComponent<Rigidbody>());
+            //_floaters.Add(other.gameObject.GetComponent<Rigidbody>());
             print($"Floater found in water {other.gameObject.name}");
         }
             
