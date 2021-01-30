@@ -46,9 +46,14 @@ public class Chain : MonoBehaviour
             {
                 float vTranslation = -Input.GetAxis("Vertical") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
                 float yTranslation = -Input.GetAxis("Mouse ScrollWheel") * _scrollDropSpeed * Time.fixedDeltaTime;
+                //float yTranslation = -Input.GetAxis("Vertical2") * _scrollDropSpeed * Time.fixedDeltaTime;
+
                 link.transform.position += new Vector3(vTranslation, yTranslation, hTranslation);
             }
         }
+
+        print($"Vertical axis {Input.GetAxis("Vertical")}");
+        print($"Horizontal axis {Input.GetAxis("Horizontal")}");
 
         // locking link (going up)
         bool masterIsLowest = _masterLink.Index >= _links.Count - 1;

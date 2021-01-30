@@ -21,11 +21,9 @@ public class CraneHead : MonoBehaviour
     {
         foreach (var grabber in _grabbers)
         {
-            //grabber.transform.Rotate(new Vector3(yDegrees, 0, 0));
             grabber.transform.localRotation *= Quaternion.Euler(new Vector3(yDegrees, 0, 0));
 
             continue;
-
             if(_target == Quaternion.identity)
                 _target = grabber.transform.localRotation * Quaternion.Euler(new Vector3(yDegrees, 0, 0));
         }
@@ -33,7 +31,7 @@ public class CraneHead : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.I))
+        if (Input.GetButtonUp("Fire1"))
         {
             ToggleGrabbers();
         }

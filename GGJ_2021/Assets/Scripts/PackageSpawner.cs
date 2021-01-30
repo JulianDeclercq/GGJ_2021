@@ -18,8 +18,6 @@ public class PackageSpawner : MonoBehaviour
         
         var randomPos = Random.onUnitSphere * _radius;
         randomPos += transform.position;
-        //randomPos.y = Mathf.Abs(randomPos.y);
-        //randomPos.z = Random.Range(0, _radius);
         Instantiate(_target, randomPos, transform.rotation, transform);
     }
     
