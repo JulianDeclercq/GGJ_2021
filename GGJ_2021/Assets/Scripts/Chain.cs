@@ -11,6 +11,9 @@ public class Chain : MonoBehaviour
     private GameObject _base;
 
     [SerializeField]
+    private CraneBridge _bridge;
+
+    [SerializeField]
     private float _headDownForce = 30f;
 
     [SerializeField]
@@ -26,25 +29,18 @@ public class Chain : MonoBehaviour
         _masterLink = _links[0];
     }
 
-    void Update()
+    void FixedUpdate()
     {
         _headRb.AddForce(Vector3.down * _headDownForce, ForceMode.Acceleration);
 
-        if (Input.GetKeyDown(KeyCode.W))
+        foreach (var link in _links)
         {
-            TranslateKineticLinks(Vector3.up);
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            TranslateKineticLinks(Vector3.down);
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            TranslateKineticLinks(new Vector3(0, 0, -1));
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            TranslateKineticLinks(new Vector3(0, 0, 1));
+            if (link.Rigidbody.isKinematic)
+            {
+                float vTranslation = -Input.GetAxis("Vertical") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
+                float hTranslation = Input.GetAxis("Horizontal") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
+                link.transform.position += new Vector3(vTranslation, 0, hTranslation);
+            }
         }
 
         // locking link (going up)
@@ -73,10 +69,6 @@ public class Chain : MonoBehaviour
 
     private void TranslateKineticLinks(Vector3 translation)
     {
-        foreach (var link in _links)
-        {
-            if (link.Rigidbody.isKinematic)
-                link.transform.position += translation;
-        }
+        
     }
 }
