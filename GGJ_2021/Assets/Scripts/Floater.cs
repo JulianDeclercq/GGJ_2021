@@ -7,16 +7,25 @@ public class Floater : MonoBehaviour
     [SerializeField]
     private GameObject _surface;
 
-    private Rigidbody _rigidbody;
-
-    private List<GameObject> _checkedObjects = new List<GameObject>();
-    private List<Rigidbody> _floaters = new List<Rigidbody>();
-
     [SerializeField]
     private float _depthBeforeSubmerged = 1f;
 
     [SerializeField]
     private float _displacementAmount = 3f;
+
+    [SerializeField]
+    [Range(0.0f, 2f)]
+    private float _waterDrag = 0.99f;
+
+    [SerializeField]
+    [Range(0.0f, 2f)]
+    private float _waterAngularDrag = 0.5f;
+
+    [SerializeField]
+    private List<GameObject> _points;
+
+    private Rigidbody _rigidbody;
+
     void Awake()
     {
         Package p = GetComponent<Package>();
@@ -26,17 +35,33 @@ public class Floater : MonoBehaviour
             Destroy(this);
         }
         _rigidbody = GetComponent<Rigidbody>();
+
+        // because gravity is calculated manually in the update, it can be disabled for the rigidbody
+        _rigidbody.useGravity = false;
     }
 
     void Update()
     {
-        // if the floater is above the surface, ignore it
-        if (transform.position.y > _surface.transform.position.y)
-            return;
+        foreach (var point in _points)
+        {
+            // gravity calculation
+            _rigidbody.AddForceAtPosition(Physics.gravity / _points.Count, point.transform.position, ForceMode.Acceleration);
 
-        float displacementMultiplier = Mathf.Clamp01((_surface.transform.position.y - transform.position.y) / _depthBeforeSubmerged) * _displacementAmount;
+            // if the floater is above the surface, ignore it
+            if (point.transform.position.y > _surface.transform.position.y)
+                continue;
 
-        // WARNING: ADDS GRAVITY SO GRAVITY NEEDS TO BE DISABLED ON THE RIGIDBODY
-        _rigidbody.AddForce(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * displacementMultiplier, 0), ForceMode.Acceleration);
+            float displacementMultiplier = Mathf.Clamp01((_surface.transform.position.y - point.transform.position.y) / _depthBeforeSubmerged) * _displacementAmount;
+
+            _rigidbody.AddForceAtPosition(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * displacementMultiplier, 0), point.transform.position, ForceMode.Acceleration);
+            _rigidbody.AddForce(displacementMultiplier * -_rigidbody.velocity * _waterDrag * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            _rigidbody.AddTorque(displacementMultiplier * -_rigidbody.angularVelocity * _waterAngularDrag * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        }
+
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            transform.position = new Vector3(transform.position.x, -10, transform.position.z);
+            transform.rotation = Quaternion.Euler(30, transform.rotation.y, transform.rotation.z);
+        }
     }
 }
