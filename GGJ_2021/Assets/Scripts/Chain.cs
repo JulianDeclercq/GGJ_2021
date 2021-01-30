@@ -33,12 +33,16 @@ public class Chain : MonoBehaviour
     {
         _headRb.AddForce(Vector3.down * _headDownForce, ForceMode.Acceleration);
 
+        // crane base
+        float hTranslation = Input.GetAxis("Horizontal") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
+        _base.transform.position += new Vector3(0, 0, hTranslation);
+
         foreach (var link in _links)
         {
             if (link.Rigidbody.isKinematic)
             {
                 float vTranslation = -Input.GetAxis("Vertical") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
-                float hTranslation = Input.GetAxis("Horizontal") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
+                //float hTranslation = Input.GetAxis("Horizontal") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
                 link.transform.position += new Vector3(vTranslation, 0, hTranslation);
             }
         }
