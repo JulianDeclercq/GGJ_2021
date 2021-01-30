@@ -1020,6 +1020,7 @@ GameObject:
   - component: {fileID: 3282394965619974222}
   - component: {fileID: 3282394965619974223}
   - component: {fileID: 3282394965619974221}
+  - component: {fileID: 2399293823032350552}
   m_Layer: 0
   m_Name: CraneHead
   m_TagString: Untagged
@@ -1027,6 +1028,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2399293823032350552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2399293823032350551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a06fcd9efca4b604c8cead26acf783b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _grabbers:
+  - {fileID: 8720496582119920182}
+  - {fileID: 8720496582402275903}
+  - {fileID: 8720496583408440724}
+  - {fileID: 8720496582286846455}
 --- !u!1 &2699806812968039177
 GameObject:
   m_ObjectHideFlags: 0
