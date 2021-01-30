@@ -8,6 +8,9 @@ public class CraneHead : MonoBehaviour
     private List<GameObject> _grabbers;
 
     private bool _open = false; //current grabber state
+
+    public float speed = 1f;
+    private Quaternion _target = Quaternion.identity;
     
     private void ToggleGrabbers()
     {
@@ -17,7 +20,15 @@ public class CraneHead : MonoBehaviour
     private void SetGrabberYRotation(float yDegrees)
     {
         foreach (var grabber in _grabbers)
-            grabber.transform.Rotate(new Vector3(yDegrees, 0, 0));
+        {
+            //grabber.transform.Rotate(new Vector3(yDegrees, 0, 0));
+            grabber.transform.localRotation *= Quaternion.Euler(new Vector3(yDegrees, 0, 0));
+
+            continue;
+
+            if(_target == Quaternion.identity)
+                _target = grabber.transform.localRotation * Quaternion.Euler(new Vector3(yDegrees, 0, 0));
+        }
     }
 
     void Update()
@@ -26,5 +37,14 @@ public class CraneHead : MonoBehaviour
         {
             ToggleGrabbers();
         }
+
+        if (_target == Quaternion.identity)
+            return;
+
+        // The step size is equal to speed times frame time.
+        var step = speed * Time.deltaTime;
+
+        // Rotate our transform a step closer to the target's.
+        _grabbers[0].transform.localRotation = Quaternion.RotateTowards(transform.rotation, _target, step);
     }
 }

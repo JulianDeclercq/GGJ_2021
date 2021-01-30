@@ -1045,6 +1045,7 @@ MonoBehaviour:
   - {fileID: 8720496582402275903}
   - {fileID: 8720496583408440724}
   - {fileID: 8720496582286846455}
+  speed: 0.2
 --- !u!1 &2699806812968039177
 GameObject:
   m_ObjectHideFlags: 0
