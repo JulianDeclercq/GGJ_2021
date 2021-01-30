@@ -22,12 +22,13 @@ public class Magnet : MonoBehaviour
     {
         // TODO: Check if magnetic through layermask
         var inRadius = Physics.OverlapSphere(transform.position, _radius, _layerMask);
-        foreach(var collider in inRadius)
+        foreach (var collider in inRadius)
         {
-            var rb = collider.GetComponent<Rigidbody>();
-            if (rb == null)
+            Package p = collider.GetComponent<Package>();
+            if (p == null || !p.Properties.HasFlag(PackageProperties.Magnetic))
                 continue;
 
+            Rigidbody rb = collider.GetComponent<Rigidbody>();
             rb.AddForce((transform.position - rb.transform.position) * _forceFactor);
         }
     }
