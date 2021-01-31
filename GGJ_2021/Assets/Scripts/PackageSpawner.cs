@@ -4,15 +4,31 @@ using UnityEngine;
 
 public class PackageSpawner : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField]
+    private int _count = 10;
+
+    [SerializeField]
+    private float _radius = 10;
+
+    [SerializeField]
+    private GameObject _target;
+
+    public void Spawn()
+    {
+        
+        var randomPos = Random.onUnitSphere * _radius;
+        randomPos += transform.position;
+        Instantiate(_target, randomPos, transform.rotation, transform);
+    }
+    
     void Start()
     {
-        
+        for (int i = 0; i < _count; ++i)
+            Spawn();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDrawGizmos()
     {
-        
+        Gizmos.DrawWireSphere(transform.position, _radius);
     }
 }

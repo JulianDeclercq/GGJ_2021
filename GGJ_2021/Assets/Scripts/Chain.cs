@@ -5,6 +5,12 @@ using UnityEngine;
 public class Chain : MonoBehaviour
 {
     [SerializeField]
+    private float _scrollDropSpeed = 10f;
+
+    [SerializeField]
+    private float _rightJoystickSens = 10f;
+
+    [SerializeField]
     private GameObject _head;
 
     [SerializeField]
@@ -42,8 +48,13 @@ public class Chain : MonoBehaviour
             if (link.Rigidbody.isKinematic)
             {
                 float vTranslation = -Input.GetAxis("Vertical") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
-                //float hTranslation = Input.GetAxis("Horizontal") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
-                link.transform.position += new Vector3(vTranslation, 0, hTranslation);
+                float yTranslation = -Input.GetAxis("Mouse ScrollWheel") * _scrollDropSpeed * Time.fixedDeltaTime;
+
+                // if no mouse scrollwheel was detected, check the right joystick
+                if (Mathf.Abs(yTranslation) < 0.05f)
+                    yTranslation = -Input.GetAxis("Vertical2") * _rightJoystickSens * Time.fixedDeltaTime;
+
+                link.transform.position += new Vector3(vTranslation, yTranslation, hTranslation);
             }
         }
 
@@ -69,10 +80,5 @@ public class Chain : MonoBehaviour
                 _masterLink = _links[_masterLink.Index - 1];
             }
         }
-    }
-
-    private void TranslateKineticLinks(Vector3 translation)
-    {
-        
     }
 }

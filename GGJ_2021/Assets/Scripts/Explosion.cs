@@ -29,18 +29,12 @@ public class Explosion : MonoBehaviour
         _explosionParent = new GameObject("ExplosionParent");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
-        explode();
+        Explode();
     }
 
-    public void explode()
+    public void Explode()
     {
         //make object disappear
         gameObject.SetActive(false);
@@ -52,7 +46,7 @@ public class Explosion : MonoBehaviour
             {
                 for (int z = 0; z < cubesInRow; z++)
                 {
-                    createPiece(x, y, z);
+                    CreatePiece(x, y, z);
                 }
             }
         }
@@ -74,7 +68,7 @@ public class Explosion : MonoBehaviour
         }
     }
 
-    void createPiece(int x, int y, int z)
+    void CreatePiece(int x, int y, int z)
     {
         //create piece
         GameObject piece;
