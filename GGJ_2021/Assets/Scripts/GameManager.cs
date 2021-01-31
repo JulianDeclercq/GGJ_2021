@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     }
 
     private List<Package> _packages = new List<Package>();
+    private bool _previewing = false;
 
     void Start()
     {
@@ -71,18 +72,22 @@ public class GameManager : MonoBehaviour
         winner.Winner = true;
         winner.Renderer.material = _targetMaterial;
         
-        StartCoroutine(FlashWinner(startDelay: 5f, duration: 2f));
+        //StartCoroutine(FlashWinner(startDelay: 5f, duration: 2f));
     }
 
-    private IEnumerator FlashWinner(float startDelay, float duration)
+    private IEnumerator FlashWinner(float startDelay = 0f, float duration = 2f)
     {
         yield return new WaitForSeconds(startDelay);
+
+        _previewing = true;
 
         UpdateAllRenderers(false);
 
         yield return new WaitForSeconds(duration);
 
         UpdateAllRenderers(true);
+
+        _previewing = false;
     }
 
     private void UpdateAllRenderers(bool state, bool excludeWinner = true)
@@ -112,6 +117,15 @@ public class GameManager : MonoBehaviour
             _currentPushCooldown -= Time.fixedDeltaTime;
             if (_currentPushCooldown < 0)
                 _currentPushCooldown = 0;
+        }
+    }
+
+    private void Update()
+    {
+        if (!_previewing)
+        {
+            if (Input.GetKeyDown(KeyCode.P))
+                StartCoroutine(FlashWinner());
         }
     }
 }
