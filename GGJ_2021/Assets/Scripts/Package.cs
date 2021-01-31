@@ -24,4 +24,6 @@ public class Package : MonoBehaviour
 {
     [EnumFlags]
     public PackageProperties Properties;
+
+    public bool Winner = false;
 }

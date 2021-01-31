@@ -5,7 +5,7 @@ using UnityEngine;
 public class CraneBridge : MonoBehaviour
 {
     [SerializeField]
-    [Range(2f, 10.0f)]
+    [Range(2f, 25f)]
     public float BridgeSpeed = 2f;
 
     void FixedUpdate()
