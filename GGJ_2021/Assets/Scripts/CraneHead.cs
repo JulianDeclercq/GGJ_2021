@@ -29,6 +29,7 @@ public class CraneHead : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        ToggleGrabbers();
     }
     void Update()
     {
