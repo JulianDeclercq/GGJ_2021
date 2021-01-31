@@ -11,16 +11,26 @@ public class PackageSpawner : MonoBehaviour
     private float _radius = 10;
 
     [SerializeField]
-    private GameObject _target;
+    private List<GameObject> _targets;
+
+    bool _first = true; // make sure 1 target exists
 
     public void Spawn()
     {
-        
         var randomPos = Random.onUnitSphere * _radius;
         randomPos += transform.position;
-        Instantiate(_target, randomPos, transform.rotation, transform);
+
+        // force spawn a correct package
+        if (_first)
+        {
+            Instantiate(_targets[4], randomPos, transform.rotation, transform);
+            _first = false;
+            return;
+        }
+
+        Instantiate(_targets[Random.Range(0, _targets.Count)], randomPos, transform.rotation, transform);
     }
-    
+
     void Start()
     {
         for (int i = 0; i < _count; ++i)

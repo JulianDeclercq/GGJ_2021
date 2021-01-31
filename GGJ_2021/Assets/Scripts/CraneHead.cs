@@ -35,8 +35,11 @@ public class CraneHead : MonoBehaviour
         if (Input.GetButtonUp("Fire1"))
             ToggleGrabbers();
 
-        if (Input.GetKeyDown(KeyCode.O))
+        if (!GameManager.Instance.OnCooldown && Input.GetKeyDown(KeyCode.O))
+        {
             _rb.AddRelativeForce(-Vector3.forward * _pushingForce, ForceMode.Impulse);
+            GameManager.Instance.ResetPushCooldown();
+        }
     }
 
     private void ToggleGrabbers()

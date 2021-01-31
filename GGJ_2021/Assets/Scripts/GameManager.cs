@@ -1,39 +1,71 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     [SerializeField]
     private GameObject _arena;
 
     [SerializeField]
     private Material _targetMaterial;
 
-    private List<GameObject> _packages = new List<GameObject>();
-    private List<Renderer> _packageRenderers = new List<Renderer>();
+    [SerializeField]
+    private float _pushCooldown;
 
-    private int _winner = -1;
+    private float _currentPushCooldown = 0f;
+
+    public float CooldownPercentage
+    {
+        get => _currentPushCooldown / _pushCooldown;
+    }
+
+    public bool OnCooldown
+    {
+        get => _currentPushCooldown > 0f;
+    }
+
+    private List<Package> _packages = new List<Package>();
 
     void Start()
     {
+        // singleton
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Debug.LogError($"GameManager instance already exists, destroying object {gameObject.name}");
+            Destroy(this);
+            return;
+        }
+
         // retrieve all packages from the arena
         for (int i = 0; i < _arena.transform.childCount; ++i)
         {
             var child = _arena.transform.GetChild(i);
-            if (child.GetComponent<Package>() == null)
+            Package p = child.GetComponent<Package>();
+            if (p == null)
+            {
+                Debug.LogError($"Child of arena did not have a package component {child.name}");
                 continue;
-            
-            _packages.Add(child.gameObject);
-            _packageRenderers.Add(child.GetComponent<Renderer>());
+            }
+
+            _packages.Add(p);
         }
 
-        // select a random winner
-        _winner = Random.Range(0, _packages.Count - 1);
-        _packages[_winner].gameObject.name = "WINNER";
-        _packages[_winner].GetComponent<Package>().Winner = true;
-        _packages[_winner].GetComponent<Renderer>().material = _targetMaterial;
+        // select a random winner, winner can only be of type 5 (only winner texture)
+        var possibleWinners = _packages.Where(x => x.Type == 5).ToList();
+        Package winner = possibleWinners[Random.Range(0, possibleWinners.Count)];
 
+        winner.gameObject.name = "WINNER";
+        winner.Winner = true;
+        winner.Renderer.material = _targetMaterial;
+        
         StartCoroutine(FlashWinner(startDelay: 5f, duration: 2f));
     }
 
@@ -50,13 +82,31 @@ public class GameManager : MonoBehaviour
 
     private void UpdateAllRenderers(bool state, bool excludeWinner = true)
     {
-        for (int i = 0; i < _packageRenderers.Count; ++i)
+        foreach (Package p in _packages)
         {
-            if (excludeWinner && i == _winner)
+            if (p == null) // TODO: does this happen when destroyed by the void or just never?
                 continue;
 
-            if (_packageRenderers[i] != null)
-                _packageRenderers[i].enabled = state;
+            if (excludeWinner && p.Winner)
+                continue;
+            
+            p.Renderer.enabled = state;
+        }
+    }
+
+    // TODO: restructure this so it's not in the gamemanager <:)
+    public void ResetPushCooldown()
+    {
+        _currentPushCooldown = _pushCooldown; 
+    }
+
+    private void FixedUpdate()
+    {
+        if (_currentPushCooldown > 0)
+        {
+            _currentPushCooldown -= Time.fixedDeltaTime;
+            if (_currentPushCooldown < 0)
+                _currentPushCooldown = 0;
         }
     }
 }

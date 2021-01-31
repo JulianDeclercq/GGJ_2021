@@ -22,8 +22,16 @@ public enum PackageProperties
 
 public class Package : MonoBehaviour
 {
+    public bool Winner = false;
+
     [EnumFlags]
     public PackageProperties Properties;
 
-    public bool Winner = false;
+    public int Type = -1;
+    public Renderer Renderer;
+
+    private void Start()
+    {
+        Renderer = GetComponent<Renderer>();
+    }
 }
