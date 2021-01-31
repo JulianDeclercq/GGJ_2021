@@ -8,6 +8,9 @@ public class Chain : MonoBehaviour
     private float _scrollDropSpeed = 10f;
 
     [SerializeField]
+    private float _rightJoystickSens = 10f;
+
+    [SerializeField]
     private GameObject _head;
 
     [SerializeField]
@@ -45,15 +48,12 @@ public class Chain : MonoBehaviour
             if (link.Rigidbody.isKinematic)
             {
                 float vTranslation = -Input.GetAxis("Vertical") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
-                float yTranslation = -Input.GetAxis("Mouse ScrollWheel") * _scrollDropSpeed * Time.fixedDeltaTime;
-                //float yTranslation = -Input.GetAxis("Vertical2") * _scrollDropSpeed * Time.fixedDeltaTime;
+                //float yTranslation = -Input.GetAxis("Mouse ScrollWheel") * _scrollDropSpeed * Time.fixedDeltaTime;
+                float yTranslation = -Input.GetAxis("Vertical2") * _rightJoystickSens * Time.fixedDeltaTime;
 
                 link.transform.position += new Vector3(vTranslation, yTranslation, hTranslation);
             }
         }
-
-        print($"Vertical axis {Input.GetAxis("Vertical")}");
-        print($"Horizontal axis {Input.GetAxis("Horizontal")}");
 
         // locking link (going up)
         bool masterIsLowest = _masterLink.Index >= _links.Count - 1;
