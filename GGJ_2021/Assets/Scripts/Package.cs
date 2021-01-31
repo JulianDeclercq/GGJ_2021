@@ -30,8 +30,11 @@ public class Package : MonoBehaviour
     public int Type = -1;
     public Renderer Renderer;
 
-    private void Start()
+    private void Awake()
     {
         Renderer = GetComponent<Renderer>();
+
+        if (Renderer == null)
+            Debug.LogError($"Couldn't retrieve renderer for {gameObject.name}");
     }
 }

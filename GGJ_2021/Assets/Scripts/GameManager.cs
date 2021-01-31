@@ -44,6 +44,11 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        if (!_arena.activeSelf)
+        {
+            Debug.LogError($"Inactive arena selected!");
+        }
+
         // retrieve all packages from the arena
         for (int i = 0; i < _arena.transform.childCount; ++i)
         {
