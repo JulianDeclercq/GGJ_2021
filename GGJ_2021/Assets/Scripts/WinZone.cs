@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WinZone : MonoBehaviour
 {
@@ -10,9 +11,11 @@ public class WinZone : MonoBehaviour
         if (p == null)
             return;
 
-        if(p.Winner)
+        if (p.Winner)
         {
-            print("WINWIN");
+            int target = SceneManager.GetActiveScene().buildIndex + 1;
+            if (target <= SceneManager.sceneCountInBuildSettings)
+                SceneManager.LoadScene(target, LoadSceneMode.Single);
         }
     }
 }

@@ -65,19 +65,5 @@ public class Floater : MonoBehaviour
             _rigidbody.AddForce(displacementMultiplier * -_rigidbody.velocity * (_waterDrag / _rigidbody.mass) * Time.fixedDeltaTime, ForceMode.VelocityChange);
             _rigidbody.AddTorque(displacementMultiplier * -_rigidbody.angularVelocity * (_waterAngularDrag / _rigidbody.mass) * Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
-
-        // manual reset
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            transform.position = new Vector3(transform.position.x, 2, transform.position.z);
-            transform.rotation = Quaternion.Euler(30, transform.rotation.y, transform.rotation.z);
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            transform.position = new Vector3(transform.position.x, 10, transform.position.z);
-            transform.rotation = Quaternion.Euler(30, transform.rotation.y, transform.rotation.z);
-        }
-#endif
     }
 }
