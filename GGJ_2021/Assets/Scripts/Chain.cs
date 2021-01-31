@@ -48,8 +48,11 @@ public class Chain : MonoBehaviour
             if (link.Rigidbody.isKinematic)
             {
                 float vTranslation = -Input.GetAxis("Vertical") * _bridge.BridgeSpeed * Time.fixedDeltaTime;
-                //float yTranslation = -Input.GetAxis("Mouse ScrollWheel") * _scrollDropSpeed * Time.fixedDeltaTime;
-                float yTranslation = -Input.GetAxis("Vertical2") * _rightJoystickSens * Time.fixedDeltaTime;
+                float yTranslation = -Input.GetAxis("Mouse ScrollWheel") * _scrollDropSpeed * Time.fixedDeltaTime;
+
+                // if no mouse scrollwheel was detected, check the right joystick
+                if (Mathf.Abs(yTranslation) < 0.05f)
+                    yTranslation = -Input.GetAxis("Vertical2") * _rightJoystickSens * Time.fixedDeltaTime;
 
                 link.transform.position += new Vector3(vTranslation, yTranslation, hTranslation);
             }
