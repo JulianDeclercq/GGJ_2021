@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,7 +17,11 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private float _pushCooldown;
 
+    [SerializeField]
+    private Text _previewCounterText;
+
     private float _currentPushCooldown = 0f;
+
 
     public float CooldownPercentage
     {
@@ -29,7 +34,9 @@ public class GameManager : MonoBehaviour
     }
 
     private List<Package> _packages = new List<Package>();
+    
     private bool _previewing = false;
+    private int _previewsLeft = 4;
 
     void Start()
     {
@@ -71,23 +78,9 @@ public class GameManager : MonoBehaviour
         winner.gameObject.name = "WINNER";
         winner.Winner = true;
         winner.Renderer.material = _targetMaterial;
-        
+
         //StartCoroutine(FlashWinner(startDelay: 5f, duration: 2f));
-    }
-
-    private IEnumerator FlashWinner(float startDelay = 0f, float duration = 2f)
-    {
-        yield return new WaitForSeconds(startDelay);
-
-        _previewing = true;
-
-        UpdateAllRenderers(false);
-
-        yield return new WaitForSeconds(duration);
-
-        UpdateAllRenderers(true);
-
-        _previewing = false;
+        UpdatePreviewCounter();
     }
 
     private void UpdateAllRenderers(bool state, bool excludeWinner = true)
@@ -124,8 +117,30 @@ public class GameManager : MonoBehaviour
     {
         if (!_previewing)
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.P) && _previewsLeft > 0)
                 StartCoroutine(FlashWinner());
         }
+    }
+    
+    private IEnumerator FlashWinner(float startDelay = 0f, float duration = 2f)
+    {
+        yield return new WaitForSeconds(startDelay);
+
+        _previewing = true;
+        --_previewsLeft;
+        UpdatePreviewCounter();
+
+        UpdateAllRenderers(false);
+
+        yield return new WaitForSeconds(duration);
+
+        UpdateAllRenderers(true);
+
+        _previewing = false;
+    }
+
+    private void UpdatePreviewCounter()
+    {
+        _previewCounterText.text = $"Press P for preview ({_previewsLeft})";
     }
 }
