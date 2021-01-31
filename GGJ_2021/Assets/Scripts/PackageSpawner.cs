@@ -17,7 +17,7 @@ public class PackageSpawner : MonoBehaviour
 
     public void Spawn()
     {
-        var randomPos = Random.onUnitSphere * _radius;
+        var randomPos = Random.insideUnitSphere * _radius;
         randomPos += transform.position;
 
         // force spawn a correct package

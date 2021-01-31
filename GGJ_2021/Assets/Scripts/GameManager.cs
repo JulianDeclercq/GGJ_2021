@@ -20,6 +20,14 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Text _previewCounterText;
 
+    [SerializeField]
+    private float _waitForSpawnDelay = 3f;
+
+    [SerializeField]
+    private List<GameObject> _enableAfterSpawnDelay;
+
+    public bool InputEnabled = false;
+
     private float _currentPushCooldown = 0f;
 
 
@@ -81,6 +89,8 @@ public class GameManager : MonoBehaviour
 
         //StartCoroutine(FlashWinner(startDelay: 5f, duration: 2f));
         UpdatePreviewCounter();
+
+        StartCoroutine(WaitForSpawn(_waitForSpawnDelay));
     }
 
     private void UpdateAllRenderers(bool state, bool excludeWinner = true)
@@ -117,7 +127,7 @@ public class GameManager : MonoBehaviour
     {
         if (!_previewing)
         {
-            if (Input.GetKeyDown(KeyCode.P) && _previewsLeft > 0)
+            if (InputEnabled && Input.GetKeyDown(KeyCode.P) && _previewsLeft > 0)
                 StartCoroutine(FlashWinner());
         }
     }
@@ -137,6 +147,16 @@ public class GameManager : MonoBehaviour
         UpdateAllRenderers(true);
 
         _previewing = false;
+    }
+
+    private IEnumerator WaitForSpawn(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        foreach (var go in _enableAfterSpawnDelay)
+            go.SetActive(true);
+
+        InputEnabled = true;
     }
 
     private void UpdatePreviewCounter()

@@ -37,6 +37,9 @@ public class Chain : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!GameManager.Instance.InputEnabled)
+            return;
+
         _headRb.AddForce(Vector3.down * _headDownForce, ForceMode.Acceleration);
 
         // crane base
