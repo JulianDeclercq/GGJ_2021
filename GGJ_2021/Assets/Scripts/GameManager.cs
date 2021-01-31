@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -25,6 +26,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> _enableAfterSpawnDelay;
+
+    [SerializeField]
+    private GameObject _winScreen;
 
     public bool InputEnabled = false;
 
@@ -125,9 +129,36 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        // Reset if ctrl + R is pressed
+        bool ctrlPressed = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+        if (ctrlPressed && Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        // load different levels as player
+        if (ctrlPressed)
+        {
+            if (Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                SceneManager.LoadScene(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad2) || Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                SceneManager.LoadScene(2);
+            }
+            if (Input.GetKeyDown(KeyCode.Keypad3) || Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                SceneManager.LoadScene(3);
+            }
+        }
+
+        if (!InputEnabled)
+            return;
+
         if (!_previewing)
         {
-            if (InputEnabled && Input.GetKeyDown(KeyCode.P) && _previewsLeft > 0)
+            if (Input.GetKeyDown(KeyCode.P) && _previewsLeft > 0)
                 StartCoroutine(FlashWinner());
         }
     }
@@ -162,5 +193,10 @@ public class GameManager : MonoBehaviour
     private void UpdatePreviewCounter()
     {
         _previewCounterText.text = $"Press P for preview ({_previewsLeft})";
+    }
+
+    public void WinScreen()
+    {
+        _winScreen.SetActive(true);
     }
 }

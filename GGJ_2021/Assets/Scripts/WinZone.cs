@@ -14,8 +14,14 @@ public class WinZone : MonoBehaviour
         if (p.Winner)
         {
             int target = SceneManager.GetActiveScene().buildIndex + 1;
-            if (target <= SceneManager.sceneCountInBuildSettings)
+            if (target < SceneManager.sceneCountInBuildSettings)
+            {
                 SceneManager.LoadScene(target, LoadSceneMode.Single);
+            }
+            else
+            {
+                GameManager.Instance.WinScreen();
+            }
         }
     }
 }
